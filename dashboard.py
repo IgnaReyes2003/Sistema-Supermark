@@ -6,7 +6,7 @@ class IMS:
         self.root.title("Sistema de Gestión Supermark | Desarrollado por Ignacio Reyes CM1")
 
         # ====Título====  
-        title=Label(self.root, text="Sistema de Gestión Supermark", font=("Nirmala UI",40,"bold")).place(x=0,y=0,relwidth=1,height=70) 
+        title=Label(self.root, text="Sistema de Gestión Supermark", font=("Consolas",38,"bold"),bg="#ffde0a",fg="black").place(x=0,y=0,relwidth=1,height=70) 
 
 root=Tk()
 obj = IMS(root)
