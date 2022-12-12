@@ -1,5 +1,6 @@
 from tkinter import*
 from PIL import Image,ImageTk #Es necesario instalar pip pillow.
+from employee import employeeClass
 class IMS:
     
     def __init__(self, root):
@@ -34,7 +35,7 @@ class IMS:
         self.icon_side=PhotoImage(file="images/arrow.png") 
 
         lbl_menu=Label(LeftMenu,text="Menú",font=("calisto mt",20,"bold"),bg="#3a7d9c").pack(side=TOP,fill=X)
-        btn_employee=Button(LeftMenu,text="Empleado",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("calisto mt",20,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_employee=Button(LeftMenu,text="Empleado",command=self.employee,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("calisto mt",20,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_supplier=Button(LeftMenu,text="Proveedor",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("calisto mt",20,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_category=Button(LeftMenu,text="Categoría",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("calisto mt",20,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_product=Button(LeftMenu,text="Productos",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("calisto mt",20,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
@@ -61,7 +62,13 @@ class IMS:
         # ==== El pie de la página ====
         lbl_footer=Label(self.root, text="SGS-Sistema de Gestión Supermark | Desarrollado por Ignacio Reyes CM1\nPara cualquier cuestión técnica, póngase en contacto con: 387xxxxx51", font=("Arial Rounded MT Bold",12),bg="#4d636d",fg="black").pack(side=BOTTOM, fill=X)
 
-root=Tk()
-obj = IMS(root)
-root.mainloop()
+#==========================================================================
+    def employee(self):
+        self.new_win=Toplevel(self.root)
+        self.new_obj=employeeClass(self.new_win)
+
+if __name__=="__main__":
+    root=Tk()
+    obj = IMS(root)
+    root.mainloop()
 
