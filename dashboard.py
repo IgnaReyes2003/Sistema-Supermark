@@ -41,8 +41,25 @@ class IMS:
         btn_sales=Button(LeftMenu,text="Ventas",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("calisto mt",20,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_exit=Button(LeftMenu,text="Salir",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("calisto mt",20,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
 
+        # ==== Contenido ==============
+        #\n
+        self.lbl_employee=Label(self.root,text="Empleado Total\n[ 0 ]",bd=5,relief=RIDGE,bg="#33bbf9",fg="white",font=("goudy old style",20,"bold"))
+        self.lbl_employee.place(x=300,y=120,height=150,width=300)
+
+        self.lbl_supplier=Label(self.root,text="Proveedor Total\n[ 0 ]",bd=5,relief=RIDGE,bg="#ff5722",fg="white",font=("goudy old style",20,"bold"))
+        self.lbl_supplier.place(x=650,y=120,height=150,width=300)
+
+        self.lbl_category=Label(self.root,text="Categoría Total\n[ 0 ]",bd=5,relief=RIDGE,bg="#009688",fg="white",font=("goudy old style",20,"bold"))
+        self.lbl_category.place(x=1000,y=120,height=150,width=300)
+
+        self.lbl_product=Label(self.root,text="Producto Total\n[ 0 ]",bd=5,relief=RIDGE,bg="#607d8b",fg="white",font=("goudy old style",20,"bold"))
+        self.lbl_product.place(x=300,y=300,height=150,width=300)
+        
+        self.lbl_sales=Label(self.root,text="Ventas Total\n[ 0 ]",bd=5,relief=RIDGE,bg="#ffc107",fg="white",font=("goudy old style",20,"bold"))
+        self.lbl_sales.place(x=650,y=300,height=150,width=300)
+
         # ==== El pie de la página ====
-        lbl_footer=Label(self.root, text="SGS-Sistema de Gestión Supermark | Desarrollado por Ignacio Reyes CM1\nPara cualquier cuestión técnica, póngase en contacto con: 387xxxxx51", font=("Arial Rounded MT Bold",15),bg="#4d636d",fg="black").place(x=0,y=70,relwidth=1,height=30)
+        lbl_footer=Label(self.root, text="SGS-Sistema de Gestión Supermark | Desarrollado por Ignacio Reyes CM1\nPara cualquier cuestión técnica, póngase en contacto con: 387xxxxx51", font=("Arial Rounded MT Bold",12),bg="#4d636d",fg="black").pack(side=BOTTOM, fill=X)
 
 root=Tk()
 obj = IMS(root)
