@@ -88,7 +88,7 @@ class employeeClass:
 
         #===== Botones ========
         btn_add=Button(self.root,text="Guardar",font=("times new roman",15,"bold"),bg="#2196f3",fg="black",cursor="hand2").place(x=500,y=305,width=110,height=28)
-        btn_update=Button(self.root,text="Actualizar",font=("times new roman",15,"bold"),bg="#4caf50",fg="black",cursor="hand2").place(x=620,y=305,width=110,height=28)
+        btn_update=Button(self.root,text="Actualizar",font=("times new roman",15,"bold"),bg="#84f578",fg="black",cursor="hand2").place(x=620,y=305,width=110,height=28)
         btn_delete=Button(self.root,text="Eliminar",font=("times new roman",15,"bold"),bg="#f44336",fg="black",cursor="hand2").place(x=740,y=305,width=110,height=28)
         btn_clear=Button(self.root,text="Limpiar",font=("times new roman",15,"bold"),bg="#607d8b",fg="black",cursor="hand2").place(x=860,y=305,width=110,height=28)
 
@@ -97,9 +97,14 @@ class employeeClass:
         emp_frame.place(x=0,y=350,relwidth=1,height=150)
 
         scrolly=Scrollbar(emp_frame,orient=VERTICAL)
-        scrolly=Scrollbar(emp_frame,orient=HORIZONTAL)
+        scrollx=Scrollbar(emp_frame,orient=HORIZONTAL)
 
-        self.EmployeeTable=ttk.Treeview(emp_frame,columns=("eid","nombre","email","género","contacto","f.d.n","f.d.i","contra","rol","dirección","salario"))
+        self.EmployeeTable=ttk.Treeview(emp_frame,columns=("eid","nombre","email","género","contacto","f.d.n","f.d.i","contra","rol","dirección","salario"),yscrollcommand=scrolly.set,xscrollcommand=scrollx.set)
+        scrollx.pack(side=BOTTOM,fill=X)
+        scrolly.pack(side=RIGHT,fill=Y)
+        scrollx.config(command=self.EmployeeTable.xview)
+        scrolly.config(command=self.EmployeeTable.yview)
+
         self.EmployeeTable.heading("eid",text="EMP ID")
         self.EmployeeTable.heading("nombre",text="Nombre")
         self.EmployeeTable.heading("email",text="Email")
@@ -111,26 +116,23 @@ class employeeClass:
         self.EmployeeTable.heading("rol",text="Rol")
         self.EmployeeTable.heading("dirección",text="Dirección")
         self.EmployeeTable.heading("salario",text="Salario")
+        
         self.EmployeeTable["show"]="headings"
 
-        
+        self.EmployeeTable.column("eid",width=90)
+        self.EmployeeTable.column("nombre",width=100)
+        self.EmployeeTable.column("email",width=100)
+        self.EmployeeTable.column("género",width=100)
+        self.EmployeeTable.column("contacto",width=100)
+        self.EmployeeTable.column("f.d.n",width=100)
+        self.EmployeeTable.column("f.d.i",width=100)
+        self.EmployeeTable.column("contra",width=100)
+        self.EmployeeTable.column("rol",width=100)
+        self.EmployeeTable.column("dirección",width=100)
+        self.EmployeeTable.column("salario",width=100)
+
         self.EmployeeTable.pack(fill=BOTH,expand=1)
 
-        #
-        self.EmployeeTable.column("eid",width=90)
-        self.EmployeeTable.column("nombre",width=90)
-        self.EmployeeTable.column("email",width=90)
-        self.EmployeeTable.column("género",width=90)
-        self.EmployeeTable.column("contacto",width=90)
-        self.EmployeeTable.column("f.d.n",width=90)
-        self.EmployeeTable.column("f.d.i",width=90)
-        self.EmployeeTable.column("contra",width=90)
-        self.EmployeeTable.column("rol",width=90)
-        self.EmployeeTable.column("dirección",width=90)
-        self.EmployeeTable.column("salario",width=90)
-        
-        
-        
 
 if __name__=="__main__":
     root=Tk()
