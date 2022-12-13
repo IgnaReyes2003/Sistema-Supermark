@@ -25,6 +25,8 @@ class employeeClass:
         self.var_email=StringVar()
         self.var_pass=StringVar()
         self.var_utype=StringVar()
+        self.var_salary=StringVar()
+
 
         #===== Cuadro de búsqueda =====
         SearchFrame=LabelFrame(self.root,text="Buscar Empleado",font=("times new roman",12,"bold"),bd=2,relief=RIDGE,bg="white")
@@ -58,12 +60,37 @@ class employeeClass:
         lbl_name = Label(self.root,text="Nombre",font=("times new roman",15),bg="white").place(x=50,y=190)
         #D.O.B (date of birth) se refiere a la fecha de nacimiento. 
         lbl_dob = Label(self.root,text="F.D.N",font=("times new roman",15),bg="white").place(x=350,y=190)
-        #D.O.J (date of joining) se refiere a la fecha de inscripción.
+        #D.O.J (date of joining) se refiere a la fecha de inicio o unión.
         lbl_doj = Label(self.root,text="F.D.I",font=("times new roman",15),bg="white").place(x=750,y=190)
 
         txt_name = Entry(self.root,textvariable=self.var_name,font=("times new roman",15),bg="lightyellow").place(x=150,y=190,width=180)
         txt_dob = Entry(self.root,textvariable=self.var_dob,font=("times new roman",15),bg="lightyellow").place(x=500,y=190,width=180)
         txt_doj = Entry(self.root,textvariable=self.var_doj,font=("times new roman",15),bg="lightyellow").place(x=850,y=190,width=180)
+
+        #===== Fila 3 ========
+        lbl_email= Label(self.root,text="Email",font=("times new roman",15),bg="white").place(x=50,y=230)
+        lbl_pass= Label(self.root,text="Contraseña",font=("times new roman",15),bg="white").place(x=350,y=230)
+        lbl_utype= Label(self.root,text="Rol",font=("times new roman",15),bg="white").place(x=750,y=230)
+
+        txt_email= Entry(self.root,textvariable=self.var_email,font=("times new roman",15),bg="lightyellow").place(x=150,y=230,width=180)
+        txt_pass= Entry(self.root,textvariable=self.var_pass,font=("times new roman",15),bg="lightyellow").place(x=500,y=230,width=180)
+        cmb_utype =ttk.Combobox(self.root,textvariable=self.var_utype,values=("Admin","Empleado"),state="readonly",justify=CENTER,font=("time new roman",15))
+        cmb_utype.place(x=850,y=230,width=180)
+        cmb_utype.current(0)
+        
+        #===== Fila 4 ========
+        lbl_address= Label(self.root,text="Dirección",font=("times new roman",15),bg="white").place(x=50,y=270)
+        lbl_salary= Label(self.root,text="Salario",font=("times new roman",15),bg="white").place(x=500,y=270)
+
+        self.txt_address= Text(self.root,font=("times new roman",15),bg="lightyellow")
+        self.txt_address.place(x=150,y=270,width=300,height=60)
+        txt_salary= Entry(self.root,textvariable=self.var_salary,font=("times new roman",15),bg="lightyellow").place(x=600,y=270,width=180)
+
+        #===== Botones ========
+        btn_add=Button(self.root,text="Guardar",font=("times new roman",15,"bold"),bg="#2196f3",fg="black",cursor="hand2").place(x=500,y=305,width=110,height=28)
+        btn_update=Button(self.root,text="Actualizar",font=("times new roman",15,"bold"),bg="#4caf50",fg="black",cursor="hand2").place(x=620,y=305,width=110,height=28)
+        btn_delete=Button(self.root,text="Eliminar",font=("times new roman",15,"bold"),bg="#f44336",fg="black",cursor="hand2").place(x=740,y=305,width=110,height=28)
+        btn_clear=Button(self.root,text="Limpiar",font=("times new roman",15,"bold"),bg="#607d8b",fg="black",cursor="hand2").place(x=860,y=305,width=110,height=28)
 
 
 if __name__=="__main__":
