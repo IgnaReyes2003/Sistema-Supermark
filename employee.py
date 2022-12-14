@@ -89,7 +89,7 @@ class employeeClass:
 
         #===== Botones ========
         btn_add=Button(self.root,text="Guardar",command=self.add,font=("times new roman",15,"bold"),bg="#2196f3",fg="black",cursor="hand2").place(x=500,y=305,width=110,height=28)
-        btn_update=Button(self.root,text="Actualizar",font=("times new roman",15,"bold"),bg="#84f578",fg="black",cursor="hand2").place(x=620,y=305,width=110,height=28)
+        btn_update=Button(self.root,text="Actualizar",command=self.update,font=("times new roman",15,"bold"),bg="#84f578",fg="black",cursor="hand2").place(x=620,y=305,width=110,height=28)
         btn_delete=Button(self.root,text="Eliminar",font=("times new roman",15,"bold"),bg="#f44336",fg="black",cursor="hand2").place(x=740,y=305,width=110,height=28)
         btn_clear=Button(self.root,text="Limpiar",font=("times new roman",15,"bold"),bg="#607d8b",fg="black",cursor="hand2").place(x=860,y=305,width=110,height=28)
 
@@ -219,7 +219,6 @@ class employeeClass:
                     messagebox.showerror("Error","ID de empleado no válido",parent=self.root)
                 else:
                     cur.execute("Update empleado set nombre=?,email=?,género=?,contacto=?,fdn=?,fdi=?,contra=?,rol=?,dirección=?,salario=? where eid=?",(
-                                                self.var_emp_id.get(),
                                                 self.var_name.get(),
                                                 self.var_email.get(),
                                                 self.var_gender.get(),
@@ -232,13 +231,32 @@ class employeeClass:
                                                 self.var_utype.get(),
                                                 self.txt_address.get('1.0',END),
                                                 self.var_salary.get(),
+                                                self.var_emp_id.get(),
                     ))
                     con.commit()
-                    messagebox.showinfo("Éxito!","Empleado añadido satisfactoriamente",parent=self.root)
+                    messagebox.showinfo("Éxito!","Empleado actualizado correctamente",parent=self.root)
                     self.show()
         except Exception as ex:
             messagebox.showerror("Error",f"Error causador por: {str(ex)}",parent=self.root)
     
+    def delete(self):
+        con=sqlite3.connect(database=r'ims.db')
+        cur=con.cursor()
+        try:
+            if self.var_emp_id.get()=="":
+                messagebox.showerror("Error","Se necesita la identificación del empleado",parent=self.root)
+            else:
+                cur.execute("Select * from empleado where eid=?",(self.var_emp_id.get(),))
+                row=cur.fetchone()
+                if row==None:
+                    messagebox.showerror("Error","ID de empleado no válido",parent=self.root)
+                else:
+                    cur.execute("delete from empleado where eid=?",(self.var_emp_id.get(),))
+                    con.commit()
+                    messagebox.showinfo("Delete","Empleado eliminado correctamente",parent=self.root)
+
+        except Exception as ex:
+            messagebox.showerror("Error",f"Error causador por: {str(ex)}",parent=self.root)
 
 if __name__=="__main__":
     root=Tk()
