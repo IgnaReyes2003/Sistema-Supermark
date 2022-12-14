@@ -90,7 +90,7 @@ class employeeClass:
         #===== Botones ========
         btn_add=Button(self.root,text="Guardar",command=self.add,font=("times new roman",15,"bold"),bg="#2196f3",fg="black",cursor="hand2").place(x=500,y=305,width=110,height=28)
         btn_update=Button(self.root,text="Actualizar",command=self.update,font=("times new roman",15,"bold"),bg="#84f578",fg="black",cursor="hand2").place(x=620,y=305,width=110,height=28)
-        btn_delete=Button(self.root,text="Eliminar",font=("times new roman",15,"bold"),bg="#f44336",fg="black",cursor="hand2").place(x=740,y=305,width=110,height=28)
+        btn_delete=Button(self.root,text="Eliminar",command=self.delete,font=("times new roman",15,"bold"),bg="#f44336",fg="black",cursor="hand2").place(x=740,y=305,width=110,height=28)
         btn_clear=Button(self.root,text="Limpiar",font=("times new roman",15,"bold"),bg="#607d8b",fg="black",cursor="hand2").place(x=860,y=305,width=110,height=28)
 
         #===== Detalles del empleado ========
@@ -251,12 +251,32 @@ class employeeClass:
                 if row==None:
                     messagebox.showerror("Error","ID de empleado no válido",parent=self.root)
                 else:
-                    cur.execute("delete from empleado where eid=?",(self.var_emp_id.get(),))
-                    con.commit()
-                    messagebox.showinfo("Delete","Empleado eliminado correctamente",parent=self.root)
+                    op=messagebox.askyesno("Confirmar","Realmente lo quieres eliminar?",parent=self.root)
+                    if op==True:
+                        cur.execute("delete from empleado where eid=?",(self.var_emp_id.get(),))
+                        con.commit()
+                        messagebox.showinfo("Delete","Empleado eliminado correctamente",parent=self.root)
+                        self.show()
 
         except Exception as ex:
             messagebox.showerror("Error",f"Error causador por: {str(ex)}",parent=self.root)
+
+    def clear(self):
+        self.var_emp_id.set("")
+        self.var_name.set("")
+        self.var_email.set("")
+        self.var_gender.set("")
+        self.var_contact.set("")
+
+        self.var_dob.set("")
+        self.var_doj.set("")
+
+        self.var_pass.set("")
+        self.var_utype.set("Admin")
+        self.txt_address.delete('1.0',END),
+        self.var_salary.set("")
+        
+
 
 if __name__=="__main__":
     root=Tk()
