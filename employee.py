@@ -1,6 +1,7 @@
 from tkinter import*
 from PIL import Image,ImageTk #Es necesario instalar pip pillow.
-from tkinter import ttk
+from tkinter import ttk,messagebox
+import sqlite3
 class employeeClass:
     def __init__(self, root):
         self.root=root
@@ -87,7 +88,7 @@ class employeeClass:
         txt_salary= Entry(self.root,textvariable=self.var_salary,font=("times new roman",15),bg="lightyellow").place(x=600,y=270,width=180)
 
         #===== Botones ========
-        btn_add=Button(self.root,text="Guardar",font=("times new roman",15,"bold"),bg="#2196f3",fg="black",cursor="hand2").place(x=500,y=305,width=110,height=28)
+        btn_add=Button(self.root,text="Guardar",command=self.add,font=("times new roman",15,"bold"),bg="#2196f3",fg="black",cursor="hand2").place(x=500,y=305,width=110,height=28)
         btn_update=Button(self.root,text="Actualizar",font=("times new roman",15,"bold"),bg="#84f578",fg="black",cursor="hand2").place(x=620,y=305,width=110,height=28)
         btn_delete=Button(self.root,text="Eliminar",font=("times new roman",15,"bold"),bg="#f44336",fg="black",cursor="hand2").place(x=740,y=305,width=110,height=28)
         btn_clear=Button(self.root,text="Limpiar",font=("times new roman",15,"bold"),bg="#607d8b",fg="black",cursor="hand2").place(x=860,y=305,width=110,height=28)
@@ -132,7 +133,112 @@ class employeeClass:
         self.EmployeeTable.column("salario",width=100)
 
         self.EmployeeTable.pack(fill=BOTH,expand=1)
+        self.EmployeeTable.bind("<ButtonRelease-1>",self.get_data)
 
+
+        self.show()
+
+        #=======================================================
+
+    def add(self):
+        con=sqlite3.connect(database=r'ims.db')
+        cur=con.cursor()
+        try:
+            if self.var_emp_id.get()=="":
+                messagebox.showerror("Error","Se necesita la identificación del empleado",parent=self.root)
+            else:
+                cur.execute("Select * from empleado where eid=?",(self.var_emp_id.get(),))
+                row=cur.fetchone()
+                if row!=None:
+                    messagebox.showerror("Error","Este ID de empleado ya está registrado, pruebe con otro",parent=self.root)
+                else:
+                    cur.execute("Insert into empleado (eid,nombre,email,género,contacto,fdn,fdi,contra,rol,dirección,salario) values(?,?,?,?,?,?,?,?,?,?,?)",(
+                                                self.var_emp_id.get(),
+                                                self.var_name.get(),
+                                                self.var_email.get(),
+                                                self.var_gender.get(),
+                                                self.var_contact.get(),
+
+                                                self.var_dob.get(),
+                                                self.var_doj.get(),
+
+                                                self.var_pass.get(),
+                                                self.var_utype.get(),
+                                                self.txt_address.get('1.0',END),
+                                                self.var_salary.get(),
+                    ))
+                    con.commit()
+                    messagebox.showinfo("Éxito!","Empleado añadido satisfactoriamente",parent=self.root)
+                    self.show()
+        except Exception as ex:
+            messagebox.showerror("Error",f"Error causador por: {str(ex)}",parent=self.root)
+    
+    def show(self):
+        con=sqlite3.connect(database=r'ims.db')
+        cur=con.cursor()
+        try:
+            cur.execute("select * from empleado")
+            rows=cur.fetchall()
+            self.EmployeeTable.delete(*self.EmployeeTable.get_children())
+            for row in rows:
+                self.EmployeeTable.insert('',END,values=row)
+
+        except Exception as ex:
+            messagebox.showerror("Error",f"Error causador por: {str(ex)}",parent=self.root)
+
+    def get_data(self,ev):
+        f=self.EmployeeTable.focus()
+        content=(self.EmployeeTable.item(f))
+        row=content['values']
+        #print(row)
+        self.var_emp_id.set(row[0])
+        self.var_name.set(row[1])
+        self.var_email.set(row[2])
+        self.var_gender.set(row[3])
+        self.var_contact.set(row[4])
+
+        self.var_dob.set(row[5])
+        self.var_doj.set(row[6])
+
+        self.var_pass.set(row[7])
+        self.var_utype.set(row[8])
+        self.txt_address.delete('1.0',END),
+        self.txt_address.insert(END,row[9]),
+        self.var_salary.set(row[10])
+        
+    def update(self):
+        con=sqlite3.connect(database=r'ims.db')
+        cur=con.cursor()
+        try:
+            if self.var_emp_id.get()=="":
+                messagebox.showerror("Error","Se necesita la identificación del empleado",parent=self.root)
+            else:
+                cur.execute("Select * from empleado where eid=?",(self.var_emp_id.get(),))
+                row=cur.fetchone()
+                if row==None:
+                    messagebox.showerror("Error","ID de empleado no válido",parent=self.root)
+                else:
+                    cur.execute("Update empleado set nombre=?,email=?,género=?,contacto=?,fdn=?,fdi=?,contra=?,rol=?,dirección=?,salario=? where eid=?",(
+                                                self.var_emp_id.get(),
+                                                self.var_name.get(),
+                                                self.var_email.get(),
+                                                self.var_gender.get(),
+                                                self.var_contact.get(),
+
+                                                self.var_dob.get(),
+                                                self.var_doj.get(),
+
+                                                self.var_pass.get(),
+                                                self.var_utype.get(),
+                                                self.txt_address.get('1.0',END),
+                                                self.var_salary.get(),
+                    ))
+                    con.commit()
+                    messagebox.showinfo("Éxito!","Empleado añadido satisfactoriamente",parent=self.root)
+                    self.show()
+        except Exception as ex:
+            messagebox.showerror("Error",f"Error causador por: {str(ex)}",parent=self.root)
+    
 
 if __name__=="__main__":
     root=Tk()
