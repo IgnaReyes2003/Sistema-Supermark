@@ -1,6 +1,7 @@
 from tkinter import*
 from PIL import Image,ImageTk #Es necesario instalar pip pillow.
 from employee import employeeClass
+from supplier import supplierClass
 class IMS:
     
     def __init__(self, root):
@@ -33,16 +34,18 @@ class IMS:
         lbl_menuLogo.pack(side=TOP,fill=X)
 
         self.icon_side=PhotoImage(file="images/arrow.png") 
-
         lbl_menu=Label(LeftMenu,text="Menú",font=("calisto mt",20,"bold"),bg="#3a7d9c").pack(side=TOP,fill=X)
+
+        #===== Botones ===============
+
         btn_employee=Button(LeftMenu,text="Empleado",command=self.employee,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("calisto mt",20,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
-        btn_supplier=Button(LeftMenu,text="Proveedor",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("calisto mt",20,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_supplier=Button(LeftMenu,text="Proveedor",command=self.supplier,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("calisto mt",20,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_category=Button(LeftMenu,text="Categoría",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("calisto mt",20,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_product=Button(LeftMenu,text="Productos",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("calisto mt",20,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_sales=Button(LeftMenu,text="Ventas",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("calisto mt",20,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_exit=Button(LeftMenu,text="Salir",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("calisto mt",20,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
 
-        # ==== Contenido ==============
+        #===== Contenido ==============
         #\n
         self.lbl_employee=Label(self.root,text="Empleado Total\n[ 0 ]",bd=5,relief=RIDGE,bg="#33bbf9",fg="white",font=("goudy old style",20,"bold"))
         self.lbl_employee.place(x=300,y=120,height=150,width=300)
@@ -66,6 +69,10 @@ class IMS:
     def employee(self):
         self.new_win=Toplevel(self.root)
         self.new_obj=employeeClass(self.new_win)
+
+    def supplier(self):
+        self.new_win=Toplevel(self.root)
+        self.new_obj=supplierClass(self.new_win)
 
 if __name__=="__main__":
     root=Tk()
