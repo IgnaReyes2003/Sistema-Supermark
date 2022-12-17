@@ -39,7 +39,7 @@ class employeeClass:
         cmb_search.current(0)
 
         txt_search=Entry(SearchFrame,textvariable=self.var_searchtxt,font=("times new roman",15),bg="lightyellow").place(x=200,y=10)
-        btn_search=Button(SearchFrame,text="Buscar",font=("times new roman",15,"bold"),bg="#84f578",fg="black",cursor="hand2").place(x=410,y=9,width=150,height=30)
+        btn_search=Button(SearchFrame,text="Buscar",command=self.search,font=("times new roman",15,"bold"),bg="#84f578",fg="black",cursor="hand2").place(x=410,y=9,width=150,height=30)
 
         #===== Title =====
         title = Label(self.root,text="Datos del empleado",font=("times new roman",15,"bold"),bg="#0f4d7d",fg="black").place(x=50,y=100,width=1000)
@@ -88,12 +88,14 @@ class employeeClass:
         txt_salary= Entry(self.root,textvariable=self.var_salary,font=("times new roman",15),bg="lightyellow").place(x=600,y=270,width=180)
 
         #===== Botones ========
+
         btn_add=Button(self.root,text="Guardar",command=self.add,font=("times new roman",15,"bold"),bg="#2196f3",fg="black",cursor="hand2").place(x=500,y=305,width=110,height=28)
         btn_update=Button(self.root,text="Actualizar",command=self.update,font=("times new roman",15,"bold"),bg="#84f578",fg="black",cursor="hand2").place(x=620,y=305,width=110,height=28)
         btn_delete=Button(self.root,text="Eliminar",command=self.delete,font=("times new roman",15,"bold"),bg="#f44336",fg="black",cursor="hand2").place(x=740,y=305,width=110,height=28)
-        btn_clear=Button(self.root,text="Limpiar",font=("times new roman",15,"bold"),bg="#607d8b",fg="black",cursor="hand2").place(x=860,y=305,width=110,height=28)
+        btn_clear=Button(self.root,text="Limpiar",command=self.clear,font=("times new roman",15,"bold"),bg="#607d8b",fg="black",cursor="hand2").place(x=860,y=305,width=110,height=28)
 
         #===== Detalles del empleado ========
+
         emp_frame=Frame(self.root,bd=3,relief=RIDGE)
         emp_frame.place(x=0,y=350,relwidth=1,height=150)
 
@@ -256,7 +258,7 @@ class employeeClass:
                         cur.execute("delete from empleado where eid=?",(self.var_emp_id.get(),))
                         con.commit()
                         messagebox.showinfo("Delete","Empleado eliminado correctamente",parent=self.root)
-                        self.show()
+                        self.clear()
 
         except Exception as ex:
             messagebox.showerror("Error",f"Error causador por: {str(ex)}",parent=self.root)
@@ -265,7 +267,7 @@ class employeeClass:
         self.var_emp_id.set("")
         self.var_name.set("")
         self.var_email.set("")
-        self.var_gender.set("")
+        self.var_gender.set("Seleccionar")
         self.var_contact.set("")
 
         self.var_dob.set("")
@@ -275,7 +277,31 @@ class employeeClass:
         self.var_utype.set("Admin")
         self.txt_address.delete('1.0',END),
         self.var_salary.set("")
+        self.var_searchtxt.set("")
+        self.var_searchby.set("Seleccionar")
+        self.show()
         
+    def search(self):
+        con=sqlite3.connect(database=r'ims.db')
+        cur=con.cursor()
+        try:
+            if self.var_searchby.get()=="Seleccionar":
+                messagebox.showerror("Error","Seleccione la opción de búsqueda",parent=self.root)
+            elif self.var_searchtxt.get()=="":
+                messagebox.showerror("Error","Debe introducir los datos del usuario que desea buscar",parent=self.root)
+            
+            else:
+                cur.execute("select * from empleado where "+self.var_searchby.get()+" LIKE '%"+self.var_searchtxt.get()+"%'")
+                rows=cur.fetchall()
+                if len(rows)!=0:
+                    self.EmployeeTable.delete(*self.EmployeeTable.get_children())
+                    for row in rows:
+                        self.EmployeeTable.insert('',END,values=row)
+                else:
+                    messagebox.showerror("Error","No se encontró ningún registro!",parent=self.root)
+
+        except Exception as ex:
+            messagebox.showerror("Error",f"Error causador por: {str(ex)}",parent=self.root)
 
 
 if __name__=="__main__":
