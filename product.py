@@ -15,6 +15,7 @@ class productClass:
         self.var_searchby=StringVar()
         self.var_searchtxt=StringVar()
 
+        self.var_pid=StringVar()
         self.var_cat=StringVar()
         self.var_sup=StringVar()
 
@@ -34,7 +35,7 @@ class productClass:
 
         title=Label(product_Frame,text="Gestión de productos",font=("times new roman",18,"bold"),bg="#0f4d7d",fg="black").pack(side=TOP,fill=X)
         
-        lbl_category=Label(product_Frame,text="Categoría",font=("times new roman",18,"bold"),bg="white").place(x=30,y=60)
+        lbl_category=Label(product_Frame,text="Categoria",font=("times new roman",18,"bold"),bg="white").place(x=30,y=60)
         lbl_supplier=Label(product_Frame,text="Proveedor",font=("times new roman",18,"bold"),bg="white").place(x=30,y=110)
         lbl_product_name=Label(product_Frame,text="Nombre",font=("times new roman",18,"bold"),bg="white").place(x=30,y=160)
         lbl_price=Label(product_Frame,text="Precio",font=("times new roman",18,"bold"),bg="white").place(x=30,y=210)
@@ -67,11 +68,11 @@ class productClass:
         btn_clear=Button(product_Frame,text="Limpiar",command=self.clear,font=("times new roman",15,"bold"),bg="#607d8b",fg="black",cursor="hand2").place(x=340,y=400,width=100,height=40)
 
         #===== Cuadro de búsqueda =====
-        SearchFrame=LabelFrame(self.root,text="Buscar Empleado",font=("times new roman",12,"bold"),bd=2,relief=RIDGE,bg="white")
+        SearchFrame=LabelFrame(self.root,text="Buscar Producto",font=("times new roman",12,"bold"),bd=2,relief=RIDGE,bg="white")
         SearchFrame.place(x=480,y=10,width=600,height=80)
 
         #===== Opciones =====
-        cmb_search=ttk.Combobox(SearchFrame,textvariable=self.var_searchby,values=("Seleccionar","Categoría","Proveedor","Nombre"),state="readonly",justify=CENTER,font=("time new roman",15))
+        cmb_search=ttk.Combobox(SearchFrame,textvariable=self.var_searchby,values=("Seleccionar","Categoria","Proveedor","Nombre"),state="readonly",justify=CENTER,font=("time new roman",15))
         cmb_search.place(x=10,y=10,width=180)
         cmb_search.current(0)
 
@@ -86,15 +87,15 @@ class productClass:
         scrolly=Scrollbar(p_frame,orient=VERTICAL)
         scrollx=Scrollbar(p_frame,orient=HORIZONTAL)
 
-        self.product_table=ttk.Treeview(p_frame,columns=("pid","categoria","proveedor","nombre","precio","cant","estado"),yscrollcommand=scrolly.set,xscrollcommand=scrollx.set)
+        self.product_table=ttk.Treeview(p_frame,columns=("pid","proveedor","categoria","nombre","precio","cant","estado"),yscrollcommand=scrolly.set,xscrollcommand=scrollx.set)
         scrollx.pack(side=BOTTOM,fill=X)
         scrolly.pack(side=RIGHT,fill=Y)
         scrollx.config(command=self.product_table.xview)
         scrolly.config(command=self.product_table.yview)
 
         self.product_table.heading("pid",text="P ID")
-        self.product_table.heading("categoria",text="Categoría")
         self.product_table.heading("proveedor",text="Proveedor")
+        self.product_table.heading("categoria",text="Categoria")
         self.product_table.heading("nombre",text="Nombre")
         self.product_table.heading("precio",text="Precio")
         self.product_table.heading("cant",text="Cant.")
@@ -189,8 +190,9 @@ class productClass:
         f=self.product_table.focus()
         content=(self.product_table.item(f))
         row=content['values']
-        self.var_cat.set(row[1])
-        self.var_sup.set(row[2])
+        self.var_pid.set(row[0])
+        self.var_cat.set(row[2])
+        self.var_sup.set(row[1])
         self.var_name.set(row[3])
         self.var_price.set(row[4])
         self.var_qty.set(row[5])
@@ -201,31 +203,25 @@ class productClass:
         con=sqlite3.connect(database=r'ims.db')
         cur=con.cursor()
         try:
-            if self.var_emp_id.get()=="":
-                messagebox.showerror("Error","Se necesita la identificación del empleado",parent=self.root)
+            if self.var_pid.get()=="":
+                messagebox.showerror("Error","Por favor, seleccione un producto de la lista",parent=self.root)
             else:
-                cur.execute("Select * from empleado where eid=?",(self.var_emp_id.get(),))
+                cur.execute("Select * from producto where pid=?",(self.var_pid.get(),))
                 row=cur.fetchone()
                 if row==None:
-                    messagebox.showerror("Error","ID de empleado no válido",parent=self.root)
+                    messagebox.showerror("Error","Producto no válido",parent=self.root)
                 else:
-                    cur.execute("Update empleado set nombre=?,email=?,género=?,contacto=?,fdn=?,fdi=?,contra=?,rol=?,dirección=?,salario=? where eid=?",(
+                    cur.execute("Update producto set categoria=?,proveedor=?,nombre=?,precio=?,cant=?,estado=? where pid=?",(
+                            self.var_cat.get(),
+                                                self.var_sup.get(),
                                                 self.var_name.get(),
-                                                self.var_email.get(),
-                                                self.var_gender.get(),
-                                                self.var_contact.get(),
-
-                                                self.var_dob.get(),
-                                                self.var_doj.get(),
-
-                                                self.var_pass.get(),
-                                                self.var_utype.get(),
-                                                self.txt_address.get('1.0',END),
-                                                self.var_salary.get(),
-                                                self.var_emp_id.get(),
-                    ))
+                                                self.var_price.get(),
+                                                self.var_qty.get(),
+                                                self.var_status.get(),
+                                                self.var_pid.get()
+                                                ))
                     con.commit()
-                    messagebox.showinfo("Éxito!","Empleado actualizado correctamente",parent=self.root)
+                    messagebox.showinfo("Éxito!","Producto actualizado correctamente",parent=self.root)
                     self.show()
         except Exception as ex:
             messagebox.showerror("Error",f"Error causador por: {str(ex)}",parent=self.root)
@@ -234,38 +230,32 @@ class productClass:
         con=sqlite3.connect(database=r'ims.db')
         cur=con.cursor()
         try:
-            if self.var_emp_id.get()=="":
-                messagebox.showerror("Error","Se necesita la identificación del empleado",parent=self.root)
+            if self.var_pid.get()=="":
+                messagebox.showerror("Error","Por favor, seleccione un producto de la lista",parent=self.root)
             else:
-                cur.execute("Select * from empleado where eid=?",(self.var_emp_id.get(),))
+                cur.execute("Select * from producto where pid=?",(self.var_pid.get(),))
                 row=cur.fetchone()
                 if row==None:
-                    messagebox.showerror("Error","ID de empleado no válido",parent=self.root)
+                    messagebox.showerror("Error","Producto no válido",parent=self.root)
                 else:
                     op=messagebox.askyesno("Confirmar","Realmente lo quieres eliminar?",parent=self.root)
                     if op==True:
-                        cur.execute("delete from empleado where eid=?",(self.var_emp_id.get(),))
+                        cur.execute("delete from producto where pid=?",(self.var_pid.get(),))
                         con.commit()
-                        messagebox.showinfo("Delete","Empleado eliminado correctamente",parent=self.root)
+                        messagebox.showinfo("Eliminar","Producto eliminado correctamente",parent=self.root)
                         self.clear()
 
         except Exception as ex:
             messagebox.showerror("Error",f"Error causador por: {str(ex)}",parent=self.root)
 
     def clear(self):
-        self.var_emp_id.set("")
+        self.var_cat.set("Seleccionar")
+        self.var_sup.set("Seleccionar")
         self.var_name.set("")
-        self.var_email.set("")
-        self.var_gender.set("Seleccionar")
-        self.var_contact.set("")
-
-        self.var_dob.set("")
-        self.var_doj.set("")
-
-        self.var_pass.set("")
-        self.var_utype.set("Admin")
-        self.txt_address.delete('1.0',END),
-        self.var_salary.set("")
+        self.var_price.set("")
+        self.var_qty.set("")
+        self.var_status.set("Disponible")
+        self.var_pid.set("")
         self.var_searchtxt.set("")
         self.var_searchby.set("Seleccionar")
         self.show()
@@ -277,10 +267,10 @@ class productClass:
             if self.var_searchby.get()=="Seleccionar":
                 messagebox.showerror("Error","Seleccione la opción de búsqueda",parent=self.root)
             elif self.var_searchtxt.get()=="":
-                messagebox.showerror("Error","Debe introducir los datos del usuario que desea buscar",parent=self.root)
+                messagebox.showerror("Error","Debe introducir los datos del producto que desea buscar",parent=self.root)
             
             else:
-                cur.execute("select * from empleado where "+self.var_searchby.get()+" LIKE '%"+self.var_searchtxt.get()+"%'")
+                cur.execute("select * from producto where "+self.var_searchby.get()+" LIKE '%"+self.var_searchtxt.get()+"%'")
                 rows=cur.fetchall()
                 if len(rows)!=0:
                     self.product_table.delete(*self.product_table.get_children())
@@ -291,7 +281,6 @@ class productClass:
 
         except Exception as ex:
             messagebox.showerror("Error",f"Error causador por: {str(ex)}",parent=self.root)
-
 
 
 if __name__=="__main__":

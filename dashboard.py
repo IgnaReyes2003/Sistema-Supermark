@@ -4,6 +4,7 @@ from employee import employeeClass
 from supplier import supplierClass
 from category import categoryClass
 from product import productClass
+from sales import salesClass
 class IMS:
     
     def __init__(self, root):
@@ -44,7 +45,7 @@ class IMS:
         btn_supplier=Button(LeftMenu,text="Proveedor",command=self.supplier,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("calisto mt",20,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_category=Button(LeftMenu,text="Categoría",command=self.category,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("calisto mt",20,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_product=Button(LeftMenu,text="Productos",command=self.product,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("calisto mt",20,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
-        btn_sales=Button(LeftMenu,text="Ventas",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("calisto mt",20,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_sales=Button(LeftMenu,text="Ventas",command=self.sales,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("calisto mt",20,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_exit=Button(LeftMenu,text="Salir",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("calisto mt",20,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
 
         #===== Contenido ==============
@@ -84,8 +85,11 @@ class IMS:
         self.new_win=Toplevel(self.root)
         self.new_obj=productClass(self.new_win)
 
+    def sales(self):
+        self.new_win=Toplevel(self.root)
+        self.new_obj=salesClass(self.new_win)
+
 if __name__=="__main__":
     root=Tk()
     obj = IMS(root)
     root.mainloop()
-

@@ -178,7 +178,7 @@ class supplierClass:
                     if op==True:
                         cur.execute("delete from proveedor where invoice=?",(self.var_sup_invoice.get(),))
                         con.commit()
-                        messagebox.showinfo("Delete","Proveedor eliminado correctamente",parent=self.root)
+                        messagebox.showinfo("Eliminar","Proveedor eliminado correctamente",parent=self.root)
                         self.clear()
 
         except Exception as ex:

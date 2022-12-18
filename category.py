@@ -129,7 +129,7 @@ class categoryClass:
                     if op==True:
                         cur.execute("delete from categoria where cid=?",(self.var_cat_id.get(),))
                         con.commit()
-                        messagebox.showinfo("Delete","Categoría eliminada correctamente",parent=self.root)
+                        messagebox.showinfo("Eliminar","Categoría eliminada correctamente",parent=self.root)
                         self.show()
                         self.var_cat_id.set("")
                         self.var_name.set("")

@@ -257,7 +257,7 @@ class employeeClass:
                     if op==True:
                         cur.execute("delete from empleado where eid=?",(self.var_emp_id.get(),))
                         con.commit()
-                        messagebox.showinfo("Delete","Empleado eliminado correctamente",parent=self.root)
+                        messagebox.showinfo("Eliminar","Empleado eliminado correctamente",parent=self.root)
                         self.clear()
 
         except Exception as ex:
