@@ -11,4 +11,10 @@ def create_db():
     cur.execute("CREATE TABLE IF NOT EXISTS proveedor(invoice INTEGER PRIMARY KEY AUTOINCREMENT,nombre text,contacto text,desc text)")
     con.commit()
 
+    cur.execute("CREATE TABLE IF NOT EXISTS categoria(cid INTEGER PRIMARY KEY AUTOINCREMENT,nombre text)")
+    con.commit()
+
+    cur.execute("CREATE TABLE IF NOT EXISTS producto(pid INTEGER PRIMARY KEY AUTOINCREMENT,proveedor text,categoria text,nombre text,precio text,cant text,estado text)")
+    con.commit()
+
 create_db()

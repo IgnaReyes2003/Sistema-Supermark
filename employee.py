@@ -41,7 +41,7 @@ class employeeClass:
         txt_search=Entry(SearchFrame,textvariable=self.var_searchtxt,font=("times new roman",15),bg="lightyellow").place(x=200,y=10)
         btn_search=Button(SearchFrame,text="Buscar",command=self.search,font=("times new roman",15,"bold"),bg="#84f578",fg="black",cursor="hand2").place(x=410,y=9,width=150,height=30)
 
-        #===== Title =====
+        #====== Título =======
         title = Label(self.root,text="Datos del empleado",font=("times new roman",15,"bold"),bg="#0f4d7d",fg="black").place(x=50,y=100,width=1000)
 
         #===== Contenido =====
@@ -140,7 +140,7 @@ class employeeClass:
 
         self.show()
 
-        #=======================================================
+    #=======================================================
 
     def add(self):
         con=sqlite3.connect(database=r'ims.db')
