@@ -191,8 +191,8 @@ class productClass:
         content=(self.product_table.item(f))
         row=content['values']
         self.var_pid.set(row[0])
-        self.var_cat.set(row[2])
         self.var_sup.set(row[1])
+        self.var_cat.set(row[2])
         self.var_name.set(row[3])
         self.var_price.set(row[4])
         self.var_qty.set(row[5])

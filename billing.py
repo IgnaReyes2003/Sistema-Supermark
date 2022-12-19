@@ -1,6 +1,7 @@
 from tkinter import*
 from PIL import Image,ImageTk #Es necesario instalar pip pillow.
 from tkinter import ttk,messagebox
+import sqlite3
 class BillClass:
     
     def __init__(self, root):
@@ -8,6 +9,7 @@ class BillClass:
         self.root.geometry("1350x700+0+0")
         self.root.title("Sistema de Gestión Supermark | Desarrollado por Ignacio Reyes CM1")
         self.root.config(bg="white")
+        self.cart_list=[]
 
         # ==== Título ====
         self.icon_title=PhotoImage(file="images/cart.png")  
@@ -22,14 +24,14 @@ class BillClass:
         self.lbl_clock.place(x=0,y=70,relwidth=1,height=30)
 
         # ==== Marco del Producto =====
-        self.var_search=StringVar()
-
+        
         ProductFrame1=Frame(self.root,bd=4,relief=RIDGE,bg="white")
         ProductFrame1.place(x=6,y=110,width=410,height=550)
 
         pTitle=Label(ProductFrame1,text="Todos los productos",font=("times new roman",20,"bold"),bg="#262626",fg="white").pack(side=TOP,fill=X)
 
-        # ======== Marco de Detalles del Producto ===========
+        # ======== Marco de Búsqueda del Producto ===========
+        self.var_search=StringVar()
         ProductFrame2=Frame(ProductFrame1,bd=2,relief=RIDGE,bg="white")
         ProductFrame2.place(x=2,y=42,width=398,height=90)
 
@@ -37,8 +39,8 @@ class BillClass:
 
         lbl_search=Label(ProductFrame2,text="Nombre del Producto",font=("times new roman",15,"bold"),bg="white").place(x=3,y=45)
         txt_search=Entry(ProductFrame2,textvariable=self.var_search,font=("times new roman",15),bg="lightyellow").place(x=190,y=47,width=110,height=22)
-        btn_search=Button(ProductFrame2,text="Buscar",font=("times new roman",15,"bold"),bg="#2196f3",fg="black",cursor="hand2").place(x=308,y=45,width=80,height=25)
-        btn_show_all=Button(ProductFrame2,text="Mostrar todo",font=("times new roman",15,"bold"),bg="#4cd925",fg="black",cursor="hand2").place(x=265,y=10,width=120,height=25)
+        btn_search=Button(ProductFrame2,text="Buscar",command=self.search,font=("times new roman",15,"bold"),bg="#2196f3",fg="black",cursor="hand2").place(x=308,y=45,width=80,height=25)
+        btn_show_all=Button(ProductFrame2,text="Mostrar todo",command=self.show,font=("times new roman",15,"bold"),bg="#4cd925",fg="black",cursor="hand2").place(x=265,y=10,width=120,height=25)
 
         #==========================================
 
@@ -62,13 +64,13 @@ class BillClass:
         
         self.product_Table["show"]="headings"
 
-        self.product_Table.column("pid",width=90)
+        self.product_Table.column("pid",width=40)
         self.product_Table.column("nombre",width=100)
         self.product_Table.column("precio",width=100)
-        self.product_Table.column("cant",width=100)
-        self.product_Table.column("status",width=100)
+        self.product_Table.column("cant",width=40)
+        self.product_Table.column("status",width=90)
         self.product_Table.pack(fill=BOTH,expand=1)
-        #self.product_Table.bind("<ButtonRelease-1>",self.get_data)
+        self.product_Table.bind("<ButtonRelease-1>",self.get_data)
 
         lbl_note=Label(ProductFrame1,text="Nota:'Introduzca 0 cantidad para eliminar el producto del carrito'",font=("times new roman",11),anchor="w",bg="white",fg="red").pack(side=BOTTOM,fill=X)
 
@@ -127,7 +129,8 @@ class BillClass:
         cart_Frame.place(x=290,y=8,width=245,height=342)
 
         #=================== Carrito =======================
-        cartTitle=Label(cart_Frame,text="Carrito Producto Total: [0]",font=("times new roman",15,"bold"),bg="lightgray").pack(side=TOP,fill=X)
+        self.cartTitle=Label(cart_Frame,text="Carrito Producto Total: [0]",font=("times new roman",15,"bold"),bg="lightgray")
+        self.cartTitle.pack(side=TOP,fill=X)
 
         scrolly=Scrollbar(cart_Frame,orient=VERTICAL)
         scrollx=Scrollbar(cart_Frame,orient=HORIZONTAL)
@@ -167,22 +170,21 @@ class BillClass:
         lbl_p_name=Label(Add_CartWidgetsFrame,text="Nombre del Producto",font=("times new roman",15),bg="white").place(x=5,y=5)
         txt_p_name=Entry(Add_CartWidgetsFrame,textvariable=self.var_nombre,font=("times new roman",15),bg="lightyellow",state="readonly").place(x=5,y=35,width=190,height=22)
 
-        lbl_precio=Label(Add_CartWidgetsFrame,text="Precio por cantidad",font=("times new roman",15),bg="white").place(x=220,y=5)
-        txt_precio=Entry(Add_CartWidgetsFrame,textvariable=self.var_nombre,font=("times new roman",15),bg="lightyellow",state="readonly").place(x=220,y=35,width=180,height=22)
+        lbl_precio=Label(Add_CartWidgetsFrame,text="Precio por unidad",font=("times new roman",15),bg="white").place(x=220,y=5)
+        txt_precio=Entry(Add_CartWidgetsFrame,textvariable=self.var_precio,font=("times new roman",15),bg="lightyellow",state="readonly").place(x=220,y=35,width=180,height=22)
 
         lbl_cant=Label(Add_CartWidgetsFrame,text="Cantidad",font=("times new roman",15),bg="white").place(x=420,y=5)
         txt_cant=Entry(Add_CartWidgetsFrame,textvariable=self.var_cant,font=("times new roman",15),bg="lightyellow").place(x=420,y=35,width=110,height=22)
 
-        self.lbl_inStock=Label(Add_CartWidgetsFrame,text="En Stock [9999]",font=("times new roman",15),bg="white")
+        self.lbl_inStock=Label(Add_CartWidgetsFrame,text="En Stock",font=("times new roman",15),bg="white")
         self.lbl_inStock.place(x=5,y=70)
 
         btn_clear_cart=Button(Add_CartWidgetsFrame,text="Limpiar",font=("times new roman",15,"bold"),bg="lightgray",cursor="hand2").place(x=145,y=70,width=150,height=30)
-        btn_add_cart=Button(Add_CartWidgetsFrame,text="Añadir | Actualizar Carrito",font=("times new roman",15,"bold"),bg="orange",cursor="hand2").place(x=305,y=70,width=235,height=30)
+        btn_add_cart=Button(Add_CartWidgetsFrame,text="Añadir | Actualizar Carrito",command=self.add_update_cart,font=("times new roman",15,"bold"),bg="orange",cursor="hand2").place(x=305,y=70,width=235,height=30)
         
         #========== Área de facturación ==========
         billFrame=Frame(self.root,bd=2,relief=RIDGE,bg="white")
         billFrame.place(x=978,y=110,width=382,height=410)
-        #billFrame.place(x=978,y=110,width=410,height=410)
 
         BTitle=Label(billFrame,text="Área de facturación del cliente",font=("times new roman",15),bg="red",fg="white").pack(side=TOP,fill=X)
         scrolly=Scrollbar(billFrame,orient=VERTICAL)
@@ -218,6 +220,7 @@ class BillClass:
         # ==== El pie de la página ====
         footer=Label(self.root,text="SGS-Sistema de Gestión Supermark | Desarrollado por Ignacio Reyes CM1\nPara cualquier cuestión técnica, póngase en contacto con: 387xxxxx51", font=("Arial Rounded MT Bold",12),bg="#4d636d",fg="black").pack(side=BOTTOM, fill=X)
 
+        self.show()
 
 #============= Todas las Funciones ===============
 
@@ -231,6 +234,108 @@ class BillClass:
     def perform_cal(self):
         result=self.var_cal_input.get()
         self.var_cal_input.set(eval(result))
+
+    def show(self):
+        con=sqlite3.connect(database=r'ims.db')
+        cur=con.cursor()
+        try:
+            cur.execute("select pid,nombre,precio,cant,estado from producto where estado='Disponible'")
+            rows=cur.fetchall()
+            self.product_Table.delete(*self.product_Table.get_children())
+            for row in rows:
+                self.product_Table.insert('',END,values=row)
+
+        except Exception as ex:
+            messagebox.showerror("Error",f"Error causador por: {str(ex)}",parent=self.root)
+
+    def search(self):
+        con=sqlite3.connect(database=r'ims.db')
+        cur=con.cursor()
+        try:
+            if self.var_search.get()=="":
+                messagebox.showerror("Error","Debe introducir los datos del producto que desea buscar",parent=self.root)
+            
+            else:
+                cur.execute("select pid,nombre,precio,cant,estado from producto where nombre LIKE '%"+self.var_search.get()+"%' and estado='Disponible'")
+                rows=cur.fetchall()
+                if len(rows)!=0:
+                    self.product_Table.delete(*self.product_Table.get_children())
+                    for row in rows:
+                        self.product_Table.insert('',END,values=row)
+                else:
+                    messagebox.showerror("Error","No se encontró ningún registro!",parent=self.root)
+
+        except Exception as ex:
+            messagebox.showerror("Error",f"Error causador por: {str(ex)}",parent=self.root)
+
+    def get_data(self,ev):
+        f=self.product_Table.focus()
+        content=(self.product_Table.item(f))
+        row=content['values']
+        #si da error probar var_name
+        self.var_pid.set(row[0])
+        self.var_nombre.set(row[1])
+        self.var_precio.set(row[2])
+        self.lbl_inStock.config(text=f"En Stock [{str(row[3])}]")
+
+    def add_update_cart(self):
+        if self.var_pid.get()=="":
+            messagebox.showerror("Error","Por favor, seleccione un producto de la lista",parent=self.root)
+        elif self.var_cant.get()=="":
+            messagebox.showerror("Error","Se requiere una cantidad",parent=self.root)
+        else:
+            price_cal=float(int(self.var_cant.get())*float(self.var_precio.get()))
+            price_cal=float(price_cal)
+            #pid,nombre,precio,cant,estado
+            cart_data=[self.var_pid.get(),self.var_nombre.get(),price_cal,self.var_cant.get()]
+
+    # ===== Actualizar carrito =======
+            present="no"
+            index_=0
+            for row in self.cart_list:
+                if self.var_pid.get()==row[0]:
+
+                    present="yes"
+                    break
+                index_+=1
+
+            if present=="yes":
+                op=messagebox.askyesno("Confirmar","Producto ya presente\n¿Desea Actualizarlo| Removerlo del carrito?",parent=self.root)
+                if op==True:
+                    if self.var_cant.get()=="0":
+                        self.cart_list.pop(index_)
+                    else:
+                        #pid 0,nombre 1,precio 2,cant 3,estado 4
+                        self.cart_list[index_][2]=price_cal
+                        self.cart_list[index_][3]=self.var_cant.get()
+
+            else:
+                self.cart_list.append(cart_data)
+
+            self.show_cart()
+            self.bill_updates()
+
+    def bill_updates(self):
+        bill_amnt=0
+        net_pay=0
+        for row in self.cart_list:
+            #pid 0,nombre 1,precio 2,cant 3,estado 4
+            bill_amnt=bill_amnt+float(row[2])
+
+        net_pay=bill_amnt-((bill_amnt*5)/100)
+        self.lbl_amnt.config(text=f"Imp. Factura\n{str(bill_amnt)}")
+        self.lbl_net_pay.config(text=f"Salario Net.\n{str(net_pay)}")
+        self.cartTitle.config(text=f"Carrito Producto Total: [{str(len(self.cart_list))}]")
+
+    def show_cart(self):
+        try:
+            self.CartTable.delete(*self.CartTable.get_children())
+            for row in self.cart_list:
+                self.CartTable.insert('',END,values=row)
+
+        except Exception as ex:
+            messagebox.showerror("Error",f"Error causador por: {str(ex)}",parent=self.root)
+
 
 if __name__=="__main__":
     root=Tk()
