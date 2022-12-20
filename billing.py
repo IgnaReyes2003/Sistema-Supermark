@@ -2,6 +2,7 @@ from tkinter import*
 from PIL import Image,ImageTk #Es necesario instalar pip pillow.
 from tkinter import ttk,messagebox
 import sqlite3
+import time
 class BillClass:
     
     def __init__(self, root):
@@ -135,7 +136,7 @@ class BillClass:
         scrolly=Scrollbar(cart_Frame,orient=VERTICAL)
         scrollx=Scrollbar(cart_Frame,orient=HORIZONTAL)
 
-        self.CartTable=ttk.Treeview(cart_Frame,columns=("pid","nombre","precio","cant","status"),yscrollcommand=scrolly.set,xscrollcommand=scrollx.set)
+        self.CartTable=ttk.Treeview(cart_Frame,columns=("pid","nombre","precio","cant"),yscrollcommand=scrolly.set,xscrollcommand=scrollx.set)
         scrollx.pack(side=BOTTOM,fill=X)
         scrolly.pack(side=RIGHT,fill=Y)
         scrollx.config(command=self.CartTable.xview)
@@ -145,17 +146,15 @@ class BillClass:
         self.CartTable.heading("nombre",text="Nombre")
         self.CartTable.heading("precio",text="Precio")
         self.CartTable.heading("cant",text="Cant.")
-        self.CartTable.heading("status",text="Estado")
         
         self.CartTable["show"]="headings"
 
         self.CartTable.column("pid",width=40)
-        self.CartTable.column("nombre",width=100)
+        self.CartTable.column("nombre",width=90)
         self.CartTable.column("precio",width=90)
-        self.CartTable.column("cant",width=50)
-        self.CartTable.column("status",width=90)
+        self.CartTable.column("cant",width=40)
         self.CartTable.pack(fill=BOTH,expand=1)
-        #self.CartTable.bind("<ButtonRelease-1>",self.get_data)
+        self.CartTable.bind("<ButtonRelease-1>",self.get_data_cart)
 
         #============ Marco de los widgets Carrito ===============
         self.var_pid=StringVar()
@@ -179,7 +178,7 @@ class BillClass:
         self.lbl_inStock=Label(Add_CartWidgetsFrame,text="En Stock",font=("times new roman",15),bg="white")
         self.lbl_inStock.place(x=5,y=70)
 
-        btn_clear_cart=Button(Add_CartWidgetsFrame,text="Limpiar",font=("times new roman",15,"bold"),bg="lightgray",cursor="hand2").place(x=145,y=70,width=150,height=30)
+        btn_clear_cart=Button(Add_CartWidgetsFrame,text="Limpiar",command=self.clear_cart,font=("times new roman",15,"bold"),bg="lightgray",cursor="hand2").place(x=145,y=70,width=150,height=30)
         btn_add_cart=Button(Add_CartWidgetsFrame,text="Añadir | Actualizar Carrito",command=self.add_update_cart,font=("times new roman",15,"bold"),bg="orange",cursor="hand2").place(x=305,y=70,width=235,height=30)
         
         #========== Área de facturación ==========
@@ -205,22 +204,23 @@ class BillClass:
         self.lbl_discount.place(x=110,y=5,width=110,height=70)
         
 
-        self.lbl_net_pay=Label(billMenuFrame,text="Salario Net.\n[0]",font=("times new roman",15),relief=RIDGE,bg="#607d8b",fg="white")
+        self.lbl_net_pay=Label(billMenuFrame,text="Total a Pagar\n[0]",font=("times new roman",15),relief=RIDGE,bg="#607d8b",fg="white")
         self.lbl_net_pay.place(x=220,y=5,width=160,height=70)
         
-        btn_print=Button(billMenuFrame,text="Mostrar",cursor="hand2",font=("times new roman",15),relief=RIDGE,bg="lightgreen",fg="white")
-        btn_print.place(x=2,y=80,width=110,height=50)
+        btn_print=Button(billMenuFrame,text="Mostrar",cursor="hand2",font=("times new roman",15),bg="lightgreen",fg="white")
+        btn_print.place(x=1,y=80,width=109,height=50)
 
-        btn_clear_all=Button(billMenuFrame,text="Limpiar Todo",cursor="hand2",font=("times new roman",14),relief=RIDGE,bg="gray",fg="white")
+        btn_clear_all=Button(billMenuFrame,text="Limpiar Todo",command=self.clear_all,cursor="hand2",font=("times new roman",14),bg="gray",fg="white")
         btn_clear_all.place(x=110,y=80,width=110,height=50)
 
-        btn_generate=Button(billMenuFrame,text="Generar/Guardar",cursor="hand2",font=("times new roman",15),relief=RIDGE,bg="#009688",fg="white")
+        btn_generate=Button(billMenuFrame,text="Generar/Guardar",command=self.generate_bill,cursor="hand2",font=("times new roman",15),bg="#009688",fg="white")
         btn_generate.place(x=220,y=80,width=160,height=50)
 
         # ==== El pie de la página ====
         footer=Label(self.root,text="SGS-Sistema de Gestión Supermark | Desarrollado por Ignacio Reyes CM1\nPara cualquier cuestión técnica, póngase en contacto con: 387xxxxx51", font=("Arial Rounded MT Bold",12),bg="#4d636d",fg="black").pack(side=BOTTOM, fill=X)
 
         self.show()
+        #self.bill_top()
 
 #============= Todas las Funciones ===============
 
@@ -277,17 +277,35 @@ class BillClass:
         self.var_nombre.set(row[1])
         self.var_precio.set(row[2])
         self.lbl_inStock.config(text=f"En Stock [{str(row[3])}]")
+        self.var_stock.set(row[3])
+        self.var_cant.set("1")
+
+    def get_data_cart(self,ev):
+        f=self.CartTable.focus()
+        content=(self.CartTable.item(f))
+        row=content['values']
+        #pid 0,nombre 1,precio 2,cant 3,estado 4
+        self.var_pid.set(row[0])
+        self.var_nombre.set(row[1])
+        self.var_precio.set(row[2])
+        self.var_cant.set(row[3])
+        self.lbl_inStock.config(text=f"En Stock [{str(row[4])}]")
+        self.var_stock.set(row[4])
+        
+
 
     def add_update_cart(self):
         if self.var_pid.get()=="":
             messagebox.showerror("Error","Por favor, seleccione un producto de la lista",parent=self.root)
         elif self.var_cant.get()=="":
             messagebox.showerror("Error","Se requiere una cantidad",parent=self.root)
+        elif int(self.var_cant.get())>int(self.var_stock.get()):
+            messagebox.showerror("Error","Cantidad inválida",parent=self.root)
         else:
-            price_cal=float(int(self.var_cant.get())*float(self.var_precio.get()))
-            price_cal=float(price_cal)
-            #pid,nombre,precio,cant,estado
-            cart_data=[self.var_pid.get(),self.var_nombre.get(),price_cal,self.var_cant.get()]
+            #price_cal=float(int(self.var_cant.get())*float(self.var_precio.get()))
+            #price_cal=float(price_cal)
+            price_cal=self.var_precio.get()
+            cart_data=[self.var_pid.get(),self.var_nombre.get(),price_cal,self.var_cant.get(),self.var_stock.get()]
 
     # ===== Actualizar carrito =======
             present="no"
@@ -306,7 +324,7 @@ class BillClass:
                         self.cart_list.pop(index_)
                     else:
                         #pid 0,nombre 1,precio 2,cant 3,estado 4
-                        self.cart_list[index_][2]=price_cal
+                        #self.cart_list[index_][2]=price_cal
                         self.cart_list[index_][3]=self.var_cant.get()
 
             else:
@@ -316,15 +334,17 @@ class BillClass:
             self.bill_updates()
 
     def bill_updates(self):
-        bill_amnt=0
-        net_pay=0
+        self.bill_amnt=0
+        self.net_pay=0
+        self.discount=0
         for row in self.cart_list:
-            #pid 0,nombre 1,precio 2,cant 3,estado 4
-            bill_amnt=bill_amnt+float(row[2])
+            #pid 0,nombre 1,precio 2,cant 3,stock
 
-        net_pay=bill_amnt-((bill_amnt*5)/100)
-        self.lbl_amnt.config(text=f"Imp. Factura\n{str(bill_amnt)}")
-        self.lbl_net_pay.config(text=f"Salario Net.\n{str(net_pay)}")
+            self.bill_amnt=self.bill_amnt+(float(row[2])*int(row[3]))
+        self.discount=(self.bill_amnt*5)/100
+        self.net_pay=self.bill_amnt-self.discount
+        self.lbl_amnt.config(text=f"Imp. Factura\n{str(self.bill_amnt)}")
+        self.lbl_net_pay.config(text=f"Total a Pagar\n{str(self.net_pay)}")
         self.cartTitle.config(text=f"Carrito Producto Total: [{str(len(self.cart_list))}]")
 
     def show_cart(self):
@@ -336,6 +356,80 @@ class BillClass:
         except Exception as ex:
             messagebox.showerror("Error",f"Error causador por: {str(ex)}",parent=self.root)
 
+    def generate_bill(self):
+        if self.var_name.get()=="" or self.var_contact.get()=="":
+            messagebox.showerror("Error",f"Se necesitan los datos del cliente",parent=self.root)
+        elif len(self.cart_list)==0:
+            messagebox.showerror("Error",f"Por favor, añada uno o más productos al carrito!!!",parent=self.root)
+        elif len(self.cart_list)>=31:
+            messagebox.showerror("Error",f"El límite es 30, remueva uno o más productos de su carrito!!!",parent=self.root)
+        else:
+            #====Factura Parte Superior =====
+            self.bill_top()
+            #====Factura Zona del Medio ====
+            self.bill_middle()
+            #==== Factura Al Fondo ====
+            self.bill_bottom()
+
+            fp=open(f"bill/{str(self.invoice)}.txt","w")
+            fp.write(self.txt_bill_area.get("1.0",END))
+            fp.close()
+            messagebox.showinfo("Aviso","La factura ha sido generada/guardada en el sistema",parent=self.root)
+
+
+    def bill_top(self):
+        self.invoice=int(time.strftime("%H%M%S"))+int(time.strftime("%d%m%Y"))
+        bill_top_temp=f'''
+\t\tSGS-Inventario
+\tNro. Móvil 38754***** ,Ignacio-02751
+{str("="*44)}
+ Nombre del cliente: {self.var_name.get()}
+ Cel. Nro. :{self.var_contact.get()}
+ Factura Nro. {str(self.invoice)}\t\t\tFecha: {str(time.strftime("%d/%m/%Y"))}
+{str("="*44)}
+ N. Producto\t\t\tCant\tPrecio
+{str("="*44)}
+        '''
+        self.txt_bill_area.delete("1.0",END)
+        self.txt_bill_area.insert("1.0",bill_top_temp)
+
+    def bill_bottom(self):
+        bill_bottom_temp=f'''
+{str("="*44)}
+ Imp. Factura\t\t\t\tArs.{self.bill_amnt}
+ Descuento\t\t\t\tArs.{self.discount}
+ Total a pagar:\t\t\tArs.{self.net_pay}
+{str("="*44)}\n
+        '''
+        self.txt_bill_area.insert(END,bill_bottom_temp)
+
+    def bill_middle(self):
+        for row in self.cart_list:
+        #pid 0,nombre 1,precio 2,cant 3,stock
+            nombre=row[1]
+            cant=row[3]
+            precio=float(row[2])*int(row[3])
+            precio=str(precio)
+            self.txt_bill_area.insert(END,"\n "+nombre+"\t\t\t"+cant+"\tArs."+precio)
+
+    def clear_cart(self):
+        self.var_pid.set("")
+        self.var_nombre.set("")
+        self.var_precio.set("")
+        self.var_cant.set("")
+        self.lbl_inStock.config(text=f"En Stock")
+        self.var_stock.set("")
+        
+    def clear_all(self):
+        del self.cart_list[:]
+        self.var_name.set("")
+        self.var_contact.set("")
+        self.txt_bill_area.delete("1.0",END)
+        self.cartTitle.config(text=f"Carrito Producto Total: [0]")
+        self.var_search.set("")
+        self.clear_cart()
+        self.show()
+        self.show_cart()
 
 if __name__=="__main__":
     root=Tk()
