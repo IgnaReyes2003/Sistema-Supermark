@@ -1,0 +1,21 @@
+
+		SGS-Inventario
+	Nro. Móvil 38754***** ,Ignacio-02751
+============================================
+ Nombre del cliente: Ignacio
+ Cel. Nro. :3875402903
+ Factura Nro. 20303571			Fecha: 20/12/2022
+============================================
+ N. Producto			Cant	Precio
+============================================
+        
+ Laptop de 8gb Ram			1	Ars.30000.0
+ Yogur de Banana			1	Ars.250.0
+ PlayStation 5			1	Ars.44000.0
+============================================
+ Imp. Factura				Ars.74250.0
+ Descuento				Ars.3712.5
+ Total a pagar:			Ars.70537.5
+============================================
+
+        

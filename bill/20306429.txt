@@ -1,0 +1,21 @@
+
+		SGS-Inventario
+	Nro. Móvil 38754***** ,Ignacio-02751
+============================================
+ Nombre del cliente: Alejandra
+ Cel. Nro. :3875604562
+ Factura Nro. 20306429			Fecha: 20/12/2022
+============================================
+ N. Producto			Cant	Precio
+============================================
+        
+ PlayStation 3			1	Ars.20000.0
+ Xbox One			1	Ars.22000.0
+ Yogur de Banana			1	Ars.250.0
+============================================
+ Imp. Factura				Ars.42250.0
+ Descuento				Ars.2112.5
+ Total a pagar:			Ars.40137.5
+============================================
+
+        

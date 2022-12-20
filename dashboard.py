@@ -5,6 +5,10 @@ from supplier import supplierClass
 from category import categoryClass
 from product import productClass
 from sales import salesClass
+import sqlite3
+from tkinter import messagebox
+import os
+import time
 class IMS:
     
     def __init__(self, root):
@@ -50,16 +54,16 @@ class IMS:
 
         #===== Contenido ==============
         #\n
-        self.lbl_employee=Label(self.root,text="Empleado Total\n[ 0 ]",bd=5,relief=RIDGE,bg="#33bbf9",fg="white",font=("goudy old style",20,"bold"))
+        self.lbl_employee=Label(self.root,text="Empleados Total\n[ 0 ]",bd=5,relief=RIDGE,bg="#33bbf9",fg="white",font=("goudy old style",20,"bold"))
         self.lbl_employee.place(x=300,y=120,height=150,width=300)
 
-        self.lbl_supplier=Label(self.root,text="Proveedor Total\n[ 0 ]",bd=5,relief=RIDGE,bg="#ff5722",fg="white",font=("goudy old style",20,"bold"))
+        self.lbl_supplier=Label(self.root,text="Proveedores Total\n[ 0 ]",bd=5,relief=RIDGE,bg="#ff5722",fg="white",font=("goudy old style",20,"bold"))
         self.lbl_supplier.place(x=650,y=120,height=150,width=300)
 
-        self.lbl_category=Label(self.root,text="Categoría Total\n[ 0 ]",bd=5,relief=RIDGE,bg="#009688",fg="white",font=("goudy old style",20,"bold"))
+        self.lbl_category=Label(self.root,text="Categorías Total\n[ 0 ]",bd=5,relief=RIDGE,bg="#009688",fg="white",font=("goudy old style",20,"bold"))
         self.lbl_category.place(x=1000,y=120,height=150,width=300)
 
-        self.lbl_product=Label(self.root,text="Producto Total\n[ 0 ]",bd=5,relief=RIDGE,bg="#607d8b",fg="white",font=("goudy old style",20,"bold"))
+        self.lbl_product=Label(self.root,text="Productos Total\n[ 0 ]",bd=5,relief=RIDGE,bg="#607d8b",fg="white",font=("goudy old style",20,"bold"))
         self.lbl_product.place(x=300,y=300,height=150,width=300)
         
         self.lbl_sales=Label(self.root,text="Ventas Total\n[ 0 ]",bd=5,relief=RIDGE,bg="#ffc107",fg="white",font=("goudy old style",20,"bold"))
@@ -67,6 +71,7 @@ class IMS:
 
         # ==== El pie de la página ====
         lbl_footer=Label(self.root, text="SGS-Sistema de Gestión Supermark | Desarrollado por Ignacio Reyes CM1\nPara cualquier cuestión técnica, póngase en contacto con: 387xxxxx51", font=("Arial Rounded MT Bold",12),bg="#4d636d",fg="black").pack(side=BOTTOM, fill=X)
+        self.update_content()
 
 #==========================================================================
     def employee(self):
@@ -88,6 +93,37 @@ class IMS:
     def sales(self):
         self.new_win=Toplevel(self.root)
         self.new_obj=salesClass(self.new_win)
+
+    def update_content(self):
+        con=sqlite3.connect(database=r'ims.db')
+        cur=con.cursor()
+        try:
+            cur.execute("select * from producto")
+            producto=cur.fetchall()
+            self.lbl_product.config(text=f"Productos Total\n[ {str(len(producto))} ]")
+
+            cur.execute("select * from proveedor")
+            proveedor=cur.fetchall()
+            self.lbl_supplier.config(text=f"Proveedores Total\n[ {str(len(proveedor))} ]")
+
+            cur.execute("select * from categoria")
+            categoria=cur.fetchall()
+            self.lbl_category.config(text=f"Categorías Total\n[ {str(len(categoria))} ]")
+
+            cur.execute("select * from empleado")
+            empleado=cur.fetchall()
+            self.lbl_employee.config(text=f"Empleados Total\n[ {str(len(empleado))} ]")
+
+            bill=len(os.listdir("bill"))
+            self.lbl_sales.config(text=f"Ventas Total [ {str(bill)} ]")
+
+            time_=time.strftime("%I:%M:%S")
+            date_=time.strftime("%d-%m-%Y")
+            self.lbl_clock.config(text=f"¡Bienvenido al sistema de gestión Supermark!\t\t Fecha: {str(date_)}\t\t Tiempo: {str(time_)}")
+            self.lbl_clock.after(200,self.update_content)
+
+        except Exception as ex:
+            messagebox.showerror("Error",f"Error causador por: {str(ex)}",parent=self.root)
 
 if __name__=="__main__":
     root=Tk()

@@ -1,0 +1,21 @@
+
+		SGS-Inventario
+	Nro. Móvil 38754***** ,Ignacio-02751
+============================================
+ Nombre del cliente: Ignacio Reyes
+ Cel. Nro. :3875402751
+ Factura Nro. 20287268			Fecha: 20/12/2022
+============================================
+ N. Producto			Cant	Precio
+============================================
+        
+ Yogur de Banana			1	Ars.250.0
+ Camiseta de Argentina			1	Ars.1900.0
+ Campera deportiva			1	Ars.1700.0
+============================================
+ Imp. Factura				Ars.3850.0
+ Descuento				Ars.192.5
+ Total a pagar:			Ars.3657.5
+============================================
+
+        

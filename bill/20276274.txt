@@ -1,0 +1,20 @@
+
+		SGS-Inventario
+	Nro. Móvil 38754***** ,Ignacio-02751
+============================================
+ Nombre del cliente: Ignacio
+ Cel. Nro. :3875402751
+ Factura Nro. 20276274			Fecha: 20/12/2022
+============================================
+ N. Producto			Cant	Precio
+============================================
+        
+ Laptop de 4gb Ram			1	Ars.21000.0
+ Caramelos 800grs			1	Ars.670.0
+============================================
+ Imp. Factura				Ars.21670.0
+ Descuento				Ars.1083.5
+ Total a pagar:			Ars.20586.5
+============================================
+
+        

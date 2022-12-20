@@ -3,6 +3,8 @@ from PIL import Image,ImageTk #Es necesario instalar pip pillow.
 from tkinter import ttk,messagebox
 import sqlite3
 import time
+import os
+import tempfile
 class BillClass:
     
     def __init__(self, root):
@@ -11,6 +13,7 @@ class BillClass:
         self.root.title("Sistema de Gestión Supermark | Desarrollado por Ignacio Reyes CM1")
         self.root.config(bg="white")
         self.cart_list=[]
+        self.chk_print=0
 
         # ==== Título ====
         self.icon_title=PhotoImage(file="images/cart.png")  
@@ -207,7 +210,7 @@ class BillClass:
         self.lbl_net_pay=Label(billMenuFrame,text="Total a Pagar\n[0]",font=("times new roman",15),relief=RIDGE,bg="#607d8b",fg="white")
         self.lbl_net_pay.place(x=220,y=5,width=160,height=70)
         
-        btn_print=Button(billMenuFrame,text="Mostrar",cursor="hand2",font=("times new roman",15),bg="lightgreen",fg="white")
+        btn_print=Button(billMenuFrame,text="Imprimir",command=self.print_bill,cursor="hand2",font=("times new roman",15),bg="lightgreen",fg="white")
         btn_print.place(x=1,y=80,width=109,height=50)
 
         btn_clear_all=Button(billMenuFrame,text="Limpiar Todo",command=self.clear_all,cursor="hand2",font=("times new roman",14),bg="gray",fg="white")
@@ -221,6 +224,7 @@ class BillClass:
 
         self.show()
         #self.bill_top()
+        self.update_date_time()
 
 #============= Todas las Funciones ===============
 
@@ -375,6 +379,7 @@ class BillClass:
             fp.write(self.txt_bill_area.get("1.0",END))
             fp.close()
             messagebox.showinfo("Aviso","La factura ha sido generada/guardada en el sistema",parent=self.root)
+            self.chk_print=1
 
 
     def bill_top(self):
@@ -404,13 +409,32 @@ class BillClass:
         self.txt_bill_area.insert(END,bill_bottom_temp)
 
     def bill_middle(self):
-        for row in self.cart_list:
-        #pid 0,nombre 1,precio 2,cant 3,stock
-            nombre=row[1]
-            cant=row[3]
-            precio=float(row[2])*int(row[3])
-            precio=str(precio)
-            self.txt_bill_area.insert(END,"\n "+nombre+"\t\t\t"+cant+"\tArs."+precio)
+        con=sqlite3.connect(database=r'ims.db')
+        cur=con.cursor()
+        try:
+            for row in self.cart_list:
+                pid=row[0]
+                nombre=row[1]
+                cant=int(row[4])-int(row[3])
+                if int(row[3])==int(row[4]):
+                    estado="Agotado"
+                if int(row[3])!=int(row[4]):
+                    estado="Disponible"
+
+                precio=float(row[2])*int(row[3])
+                precio=str(precio)
+                self.txt_bill_area.insert(END,"\n "+nombre+"\t\t\t"+row[3]+"\tArs."+precio)
+                #====== Actualizar cantidad de productos en la tabla ======
+                cur.execute("Update producto set cant=?,estado=? where pid=?",(
+                    cant,
+                    estado,
+                    pid
+                ))
+                con.commit()
+            con.close()
+            self.show()
+        except Exception as ex:
+            messagebox.showerror("Error",f"Error causador por: {str(ex)}",parent=self.root)
 
     def clear_cart(self):
         self.var_pid.set("")
@@ -421,6 +445,7 @@ class BillClass:
         self.var_stock.set("")
         
     def clear_all(self):
+        self.chk_print=0
         del self.cart_list[:]
         self.var_name.set("")
         self.var_contact.set("")
@@ -430,6 +455,22 @@ class BillClass:
         self.clear_cart()
         self.show()
         self.show_cart()
+
+    def update_date_time(self):
+        time_=time.strftime("%I:%M:%S")
+        date_=time.strftime("%d-%m-%Y")
+        self.lbl_clock.config(text=f"¡Bienvenido al sistema de gestión Supermark!\t\t Fecha: {str(date_)}\t\t Tiempo: {str(time_)}")
+        self.lbl_clock.after(200,self.update_date_time)
+
+    def print_bill(self):
+        if self.chk_print==1:
+            messagebox.showinfo("Mensaje","Por favor, espere mientras se imprime",parent=self.root)
+            new_file=tempfile.mktemp(".txt")
+            open(new_file,"w").write(self.txt_bill_area.get("1.0",END))
+            os.startfile(new_file,"print")
+        else:
+            messagebox.showerror("Error","Por favor, realice la factura y luego podrá imprimirla",parent=self.root)
+            
 
 if __name__=="__main__":
     root=Tk()

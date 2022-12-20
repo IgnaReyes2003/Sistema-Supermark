@@ -42,8 +42,9 @@ class salesClass:
         bill_Frame.place(x=280,y=140,width=410,height=330)
 
         lbl_title2=Label(bill_Frame,text="Área de facturación del cliente",font=("times new roman",15,"bold"),bg="orange").pack(side=TOP,fill=X)
+        
         scrolly2=Scrollbar(bill_Frame,orient=VERTICAL)
-        self.bill_area=Text(bill_Frame,font=("times new roman",15),bg="lightyellow",yscrollcommand=scrolly2.set)
+        self.bill_area=Text(bill_Frame,bg="lightyellow",yscrollcommand=scrolly2.set)
         scrolly2.pack(side=RIGHT,fill=Y)
         scrolly2.config(command=self.bill_area.yview)
         self.bill_area.pack(fill=BOTH,expand=1)
