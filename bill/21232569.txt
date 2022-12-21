@@ -1,0 +1,48 @@
+
+		SGS-Inventario
+	Nro. Móvil 38754***** ,Ignacio-02751
+============================================
+ Nombre del cliente: Guillermo
+ Cel. Nro. :3875402751
+ Factura Nro. 21232569			Fecha: 21/12/2022
+============================================
+ N. Producto			Cant	Precio
+============================================
+        
+ Yogur de Banana			1	Ars.250.0
+ Botines Rojos			1	Ars.3400.0
+ Coca-Cola 3L			1	Ars.550.0
+ Tijeras amarillas			1	Ars.64.0
+ Sprite 2L			1	Ars.370.0
+ Fanta 3L			1	Ars.550.0
+ Coca-Cola Light 500ml			1	Ars.190.0
+ Lapicera azul			1	Ars.100.0
+ Xbox Clásica			1	Ars.14000.0
+ PlayStation 1			1	Ars.16000.0
+ PlayStation 2			1	Ars.17800.0
+ Camiseta de Argentina			1	Ars.1900.0
+ Campera deportiva			1	Ars.1700.0
+ Zapatillas negras			1	Ars.2400.0
+ Laptop de 4gb Ram			1	Ars.21000.0
+ Caramelos 800grs			1	Ars.670.0
+ Laptop de 8gb Ram			1	Ars.30000.0
+ Xbox 360			1	Ars.17000.0
+ Xbox One			1	Ars.22000.0
+ PlayStation 3			1	Ars.20000.0
+ PlayStation 4			1	Ars.36000.0
+ PlayStation 5			1	Ars.44000.0
+ Leche Descremeda			1	Ars.330.0
+ Queso Rallado			1	Ars.730.0
+ Leche Entera Clásica			1	Ars.210.0
+ Leche Vegetal			1	Ars.510.0
+ Dulce de Leche			1	Ars.293.0
+ Sprite 3L			1	Ars.540.0
+ Jugo Cepita 1L			1	Ars.350.0
+ Coca-Cola 2L			1	Ars.360.0
+============================================
+ Imp. Factura				Ars.253267.0
+ Descuento				Ars.12663.35
+ Total a pagar:			Ars.240603.65
+============================================
+
+        

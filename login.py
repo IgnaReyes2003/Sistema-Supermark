@@ -112,7 +112,8 @@ class Login_System:
                     title=Label(self.forget_win,text="Restablecer contraseña",font=("times new roman",15,"bold"),bg="#3f51b5",fg="white").pack(side=TOP,fill=X)
                     lbl_reset=Label(self.forget_win,text="Ingresar el email registrado",font=("times new roman",15)).place(x=20,y=60)
                     txt_reset=Entry(self.forget_win,textvariable=self.var_otp,font=("times new roman",15),bg="lightyellow").place(x=20,y=100,width=250,height=30)
-                    btn_reset=Button(self.forget_win,text="Enviar",font=("times new roman",15),bg="lightblue").place(x=20,y=100,width=250,height=30)
+                    btn_reset=Button(self.forget_win,text="Enviar",font=("times new roman",15),bg="lightblue")
+                    btn_reset.place(x=20,y=100,width=250,height=30)
 
         except Exception as ex:
             messagebox.showerror("Error",f"Error causador por: {str(ex)}",parent=self.root)
