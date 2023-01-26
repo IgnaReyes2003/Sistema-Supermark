@@ -54,6 +54,8 @@ class Login_System:
 
         self.animate()
 
+#=================== Todas las funciones ==================
+
     def animate(self):
         self.im=self.im2
         self.im2=self.im3
@@ -62,8 +64,6 @@ class Login_System:
         self.lbl_change_image.config(image=self.im)
         #milisec
         self.lbl_change_image.after(2000,self.animate)
-
-#=================== Todas las funciones ==================
 
     def login(self):
         con=sqlite3.connect(database=r'ims.db')
