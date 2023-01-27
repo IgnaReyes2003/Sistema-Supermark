@@ -59,6 +59,7 @@ class Login_System:
         self.lbl_change_image.place(x=337,y=145,width=241,height=430)
 
         self.animate()
+        self.send_email("xyz")
 
 #=================== Todas las funciones ==================
 
@@ -141,7 +142,8 @@ class Login_System:
 
         s.login(email_,pass_)
 
-        self.otp=tim
+        self.otp=str(time.strftime("%H%S%M"))+str(time.strftime("%S"))
+        print(self.otp)
 
 root=Tk()
 obj=Login_System(root)
