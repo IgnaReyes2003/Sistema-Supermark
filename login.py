@@ -3,12 +3,18 @@ from PIL import ImageTk
 from tkinter import messagebox
 import sqlite3
 import os
+import email_pass
+import smtplib
+import time
 class Login_System:
     def __init__(self,root):
         self.root=root
         self.root.title("Inicio de Sesión | Desarrollado por Ignacio Reyes CM1")
         self.root.geometry("1350x700+0+0")
         self.root.config(bg="#fafafa")
+
+        self.otp=""
+
         #====== Imágenes ======
         self.phone_image=ImageTk.PhotoImage(file="images/phone1.png")
         self.lbl_Phone_image=Label(self.root,image=self.phone_image,bd=0).place(x=200,y=50)
@@ -115,14 +121,27 @@ class Login_System:
                     self.btn_reset=Button(self.forget_win,text="Enviar",font=("times new roman",15),bg="lightblue")
                     self.btn_reset.place(x=280,y=100,width=100,height=30)
 
-                    lbl_new_pass=Label(self.forget_win,text="Nueva contraseña",font=("times new roman",15)).place(x=20,y=60)
-                    txt_new_pass=Entry(self.forget_win,textvariable=self.var_new_pass,font=("times new roman",15),bg="lightyellow").place(x=20,y=100,width=250,height=30)
+                    lbl_new_pass=Label(self.forget_win,text="Nueva contraseña",font=("times new roman",15)).place(x=20,y=160)
+                    txt_new_pass=Entry(self.forget_win,textvariable=self.var_new_pass,font=("times new roman",15),bg="lightyellow").place(x=20,y=190,width=250,height=30)
                     
-                    lbl_c_pass=Label(self.forget_win,text="Confirmar contraseña",font=("times new roman",15)).place(x=20,y=60)
-                    txt_c_pass=Entry(self.forget_win,textvariable=self.var_conf_pass,font=("times new roman",15),bg="lightyellow").place(x=20,y=100,width=250,height=30)
+                    lbl_c_pass=Label(self.forget_win,text="Confirmar contraseña",font=("times new roman",15)).place(x=20,y=225)
+                    txt_c_pass=Entry(self.forget_win,textvariable=self.var_conf_pass,font=("times new roman",15),bg="lightyellow").place(x=20,y=255,width=250,height=30)
                     
+                    self.btn_update=Button(self.forget_win,text="Actualizar",state=DISABLED,font=("times new roman",15),bg="lightblue")
+                    self.btn_update.place(x=150,y=300,width=100,height=30)
+
         except Exception as ex:
             messagebox.showerror("Error",f"Error causador por: {str(ex)}",parent=self.root)
+
+    def send_email(self,to_):
+        s=smtplib.SMTP("smtp.gmail.com",587)
+        s.starttls()
+        email_=email_pass.email_
+        pass_=email_pass.pass_
+
+        s.login(email_,pass_)
+
+        self.otp=tim
 
 root=Tk()
 obj=Login_System(root)
