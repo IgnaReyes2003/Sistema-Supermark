@@ -111,25 +111,29 @@ class Login_System:
                     self.var_new_pass=StringVar()
                     self.var_conf_pass=StringVar()
                     #call send_email_function()
-                    self.forget_win=Toplevel(self.root)
-                    self.forget_win.title("Restablecer contraseña")
-                    self.forget_win.geometry("400x350+500+100")
-                    self.forget_win.focus_force()
+                    chk=self.send_email(email[0])
+                    if chk=="f":
+                        messagebox.showerror("Error","Conexión no establecida, inténtalo de nuevo",parent=self.root)
+                    else:
+                        self.forget_win=Toplevel(self.root)
+                        self.forget_win.title("Restablecer contraseña")
+                        self.forget_win.geometry("400x350+500+100")
+                        self.forget_win.focus_force()
 
-                    title=Label(self.forget_win,text="Restablecer contraseña",font=("times new roman",15,"bold"),bg="#3f51b5",fg="white").pack(side=TOP,fill=X)
-                    lbl_reset=Label(self.forget_win,text="Ingresar la clave enviada a su email",font=("times new roman",15)).place(x=20,y=60)
-                    txt_reset=Entry(self.forget_win,textvariable=self.var_otp,font=("times new roman",15),bg="lightyellow").place(x=20,y=100,width=250,height=30)
-                    self.btn_reset=Button(self.forget_win,text="Enviar",font=("times new roman",15),bg="lightblue")
-                    self.btn_reset.place(x=280,y=100,width=100,height=30)
+                        title=Label(self.forget_win,text="Restablecer contraseña",font=("times new roman",15,"bold"),bg="#3f51b5",fg="white").pack(side=TOP,fill=X)
+                        lbl_reset=Label(self.forget_win,text="Ingresar la clave enviada a su email",font=("times new roman",15)).place(x=20,y=60)
+                        txt_reset=Entry(self.forget_win,textvariable=self.var_otp,font=("times new roman",15),bg="lightyellow").place(x=20,y=100,width=250,height=30)
+                        self.btn_reset=Button(self.forget_win,text="Enviar",font=("times new roman",15),bg="lightblue")
+                        self.btn_reset.place(x=280,y=100,width=100,height=30)
 
-                    lbl_new_pass=Label(self.forget_win,text="Nueva contraseña",font=("times new roman",15)).place(x=20,y=160)
-                    txt_new_pass=Entry(self.forget_win,textvariable=self.var_new_pass,font=("times new roman",15),bg="lightyellow").place(x=20,y=190,width=250,height=30)
+                        lbl_new_pass=Label(self.forget_win,text="Nueva contraseña",font=("times new roman",15)).place(x=20,y=160)
+                        txt_new_pass=Entry(self.forget_win,textvariable=self.var_new_pass,font=("times new roman",15),bg="lightyellow").place(x=20,y=190,width=250,height=30)
                     
-                    lbl_c_pass=Label(self.forget_win,text="Confirmar contraseña",font=("times new roman",15)).place(x=20,y=225)
-                    txt_c_pass=Entry(self.forget_win,textvariable=self.var_conf_pass,font=("times new roman",15),bg="lightyellow").place(x=20,y=255,width=250,height=30)
+                        lbl_c_pass=Label(self.forget_win,text="Confirmar contraseña",font=("times new roman",15)).place(x=20,y=225)
+                        txt_c_pass=Entry(self.forget_win,textvariable=self.var_conf_pass,font=("times new roman",15),bg="lightyellow").place(x=20,y=255,width=250,height=30)
                     
-                    self.btn_update=Button(self.forget_win,text="Actualizar",state=DISABLED,font=("times new roman",15),bg="lightblue")
-                    self.btn_update.place(x=150,y=300,width=100,height=30)
+                        self.btn_update=Button(self.forget_win,text="Actualizar",state=DISABLED,font=("times new roman",15),bg="lightblue")
+                        self.btn_update.place(x=150,y=300,width=100,height=30)
 
         except Exception as ex:
             messagebox.showerror("Error",f"Error causador por: {str(ex)}",parent=self.root)
@@ -142,8 +146,19 @@ class Login_System:
 
         s.login(email_,pass_)
 
-        self.otp=str(time.strftime("%H%S%M"))+str(time.strftime("%S"))
-        print(self.otp)
+        #self.otp=str(time.strftime("%H%S%M"))+str(time.strftime("%S"))
+        self.otp=int(time.strftime("%H%S%M"))+int(time.strftime("%S"))
+        
+        subj="SGS-Reestablecer contraseña"
+        msg=f"Dear Sir/Madamm,\n\ntu contraseña {str(self.otp)}.\n\n with regards,\nSGS Team"
+        msg="Subject:{}\n\n{}".format(subj,msg)
+        s.sendmail(email_,to_,msg)
+        chk=s.ehlo()
+
+        if chk[0]==250:
+            return "s"
+        else:
+            return "f"
 
 root=Tk()
 obj=Login_System(root)
