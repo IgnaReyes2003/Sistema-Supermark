@@ -110,11 +110,17 @@ class Login_System:
                     self.forget_win.focus_force()
 
                     title=Label(self.forget_win,text="Restablecer contraseña",font=("times new roman",15,"bold"),bg="#3f51b5",fg="white").pack(side=TOP,fill=X)
-                    lbl_reset=Label(self.forget_win,text="Ingresar el email registrado",font=("times new roman",15)).place(x=20,y=60)
+                    lbl_reset=Label(self.forget_win,text="Ingresar la clave enviada a su email",font=("times new roman",15)).place(x=20,y=60)
                     txt_reset=Entry(self.forget_win,textvariable=self.var_otp,font=("times new roman",15),bg="lightyellow").place(x=20,y=100,width=250,height=30)
-                    btn_reset=Button(self.forget_win,text="Enviar",font=("times new roman",15),bg="lightblue")
-                    btn_reset.place(x=20,y=100,width=250,height=30)
+                    self.btn_reset=Button(self.forget_win,text="Enviar",font=("times new roman",15),bg="lightblue")
+                    self.btn_reset.place(x=280,y=100,width=100,height=30)
 
+                    lbl_new_pass=Label(self.forget_win,text="Nueva contraseña",font=("times new roman",15)).place(x=20,y=60)
+                    txt_new_pass=Entry(self.forget_win,textvariable=self.var_new_pass,font=("times new roman",15),bg="lightyellow").place(x=20,y=100,width=250,height=30)
+                    
+                    lbl_c_pass=Label(self.forget_win,text="Confirmar contraseña",font=("times new roman",15)).place(x=20,y=60)
+                    txt_c_pass=Entry(self.forget_win,textvariable=self.var_conf_pass,font=("times new roman",15),bg="lightyellow").place(x=20,y=100,width=250,height=30)
+                    
         except Exception as ex:
             messagebox.showerror("Error",f"Error causador por: {str(ex)}",parent=self.root)
 
