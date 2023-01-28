@@ -132,14 +132,27 @@ class Login_System:
                         lbl_c_pass=Label(self.forget_win,text="Confirmar contraseña",font=("times new roman",15)).place(x=20,y=225)
                         txt_c_pass=Entry(self.forget_win,textvariable=self.var_conf_pass,font=("times new roman",15),bg="lightyellow").place(x=20,y=255,width=250,height=30)
                     
-                        self.btn_update=Button(self.forget_win,text="Actualizar",state=DISABLED,font=("times new roman",15),bg="lightblue")
+                        self.btn_update=Button(self.forget_win,text="Actualizar",command=self.update_password,state=DISABLED,font=("times new roman",15),bg="lightblue")
                         self.btn_update.place(x=150,y=300,width=100,height=30)
 
         except Exception as ex:
             messagebox.showerror("Error",f"Error causador por: {str(ex)}",parent=self.root)
 
     def update_password(self):
-        if self.var_new_pass.get()=="" or self.var_conf_pass:
+        if self.var_new_pass.get()=="" or self.var_conf_pass.get()=="":
+            messagebox.showerror("Error","Contraseña requerida",parent=self.forget_win)
+        elif self.var_new_pass.get() != self.var_conf_pass.get():
+            messagebox.showerror("Error","La nueva contraseña y la contraseña de confirmación deben ser las mismas",parent=self.forget_win)
+        else:
+            con=sqlite3.connect(database=r'ims.db')
+            cur=con.cursor()
+            try:
+                cur.execute("Update empleado SET contra=? where eid=?",(self.var_new_pass.get(),self.employee_id.get()))
+                con.commit()
+                messagebox.showinfo("Éxito","Contraseña actualizada correctamente",parent=self.forget_win)
+                self.forget_win.destroy()
+            except Exception as ex:
+                messagebox.showerror("Error",f"Error causador por: {str(ex)}",parent=self.root)
 
     def validate_otp(self):
         if int(self.otp)==int(self.var_otp.get()):
@@ -159,7 +172,7 @@ class Login_System:
         self.otp=int(time.strftime("%H%S%M"))+int(time.strftime("%S"))
         
         subj="SGS-Reestablecer contraseña"
-        msg=f"Dear Sir/Madamm,\n\ntu contraseña {str(self.otp)}.\n\n with regards,\nSGS Team"
+        msg=f"Estimado Sr/Sra,\n\nsu clave es {str(self.otp)}.\n\n con respeto,\nSGS Team"
         msg="Subject:{}\n\n{}".format(subj,msg)
         
         s.sendmail(email_,to_,msg.encode("utf8"))
