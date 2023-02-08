@@ -1,0 +1,21 @@
+
+		SGS-Inventario
+	Nro. Móvil 38754***** ,Ignacio-02751
+============================================
+ Nombre del cliente: Jorge
+ Cel. Nro. :3874562976
+ Factura Nro. 1212360			Fecha: 01/02/2023
+============================================
+ N. Producto			Cant	Precio
+============================================
+        
+ Campera deportiva			1	Ars.1700.0
+ PlayStation 1			1	Ars.16000.0
+ Caramelos 800grs			1	Ars.670.0
+============================================
+ Imp. Factura				Ars.18370.0
+ Descuento				Ars.918.5
+ Total a pagar:			Ars.17451.5
+============================================
+
+        
